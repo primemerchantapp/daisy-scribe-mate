@@ -9,7 +9,7 @@ const Header = () => {
         <div className="flex items-center">
           <div className="relative mr-3">
             <img 
-              src="/lovable-uploads/3a264ed8-7828-4bac-823d-7c4cf98e5b7e.png" 
+              src="/lovable-uploads/db67eac0-b997-44d1-a13d-295aeae19d65.png" 
               alt="Scribe Medic Logo" 
               className="h-10 w-auto" 
             />
