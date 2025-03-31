@@ -19,29 +19,29 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <main className="container mx-auto pt-20 pb-24 px-4 overflow-y-auto">
+      <main className="container mx-auto pt-20 pb-24 px-4 max-w-3xl">
         <div className="flex flex-col items-center mb-8">
           <div className="relative mb-4">
             <Avatar className="h-24 w-24 border-4 border-white shadow-md">
               <AvatarImage src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80" alt="Dr. Sarah Wilson" />
               <AvatarFallback>SW</AvatarFallback>
             </Avatar>
-            <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8">
+            <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 bg-medical-primary text-white hover:bg-medical-secondary">
               <Pencil size={16} />
             </Button>
           </div>
-          <h1 className="text-2xl font-bold">Dr. Sarah Wilson</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Dr. Sarah Wilson</h1>
           <p className="text-gray-600">Pediatric Physician</p>
           <div className="flex gap-2 mt-2">
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+            <Badge variant="outline" className="bg-blue-50 text-medical-primary hover:bg-blue-100">
               Verified Provider
             </Badge>
-            <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
+            <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-100">
               Premium
             </Badge>
           </div>
           <div className="flex gap-2 mt-6">
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline" className="flex items-center gap-2 border-medical-primary text-medical-primary hover:bg-blue-50">
               <Settings size={16} />
               <span>Settings</span>
             </Button>
@@ -53,10 +53,10 @@ const ProfilePage = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Card className="shadow-sm">
+          <Card className="shadow-sm border border-gray-100">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <User size={18} />
+              <CardTitle className="text-base font-semibold flex items-center gap-2 text-gray-800">
+                <User size={18} className="text-medical-primary" />
                 Personal Information
               </CardTitle>
             </CardHeader>
@@ -75,16 +75,16 @@ const ProfilePage = () => {
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-              <Button variant="ghost" size="sm" className="text-primary">
+              <Button variant="ghost" size="sm" className="text-medical-primary hover:bg-blue-50">
                 Edit Details
               </Button>
             </CardFooter>
           </Card>
           
-          <Card className="shadow-sm">
+          <Card className="shadow-sm border border-gray-100">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Building size={18} />
+              <CardTitle className="text-base font-semibold flex items-center gap-2 text-gray-800">
+                <Building size={18} className="text-medical-primary" />
                 Practice Information
               </CardTitle>
             </CardHeader>
@@ -103,16 +103,16 @@ const ProfilePage = () => {
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-              <Button variant="ghost" size="sm" className="text-primary">
+              <Button variant="ghost" size="sm" className="text-medical-primary hover:bg-blue-50">
                 View Details
               </Button>
             </CardFooter>
           </Card>
           
-          <Card className="shadow-sm">
+          <Card className="shadow-sm border border-gray-100">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <FileText size={18} />
+              <CardTitle className="text-base font-semibold flex items-center gap-2 text-gray-800">
+                <FileText size={18} className="text-medical-primary" />
                 Documentation Stats
               </CardTitle>
             </CardHeader>
@@ -124,7 +124,7 @@ const ProfilePage = () => {
                     <span className="font-medium">124</span>
                   </div>
                   <div className="h-2 bg-gray-200 rounded-full">
-                    <div className="h-2 bg-primary rounded-full" style={{ width: '82%' }}></div>
+                    <div className="h-2 bg-medical-primary rounded-full" style={{ width: '82%' }}></div>
                   </div>
                 </div>
                 <div>
@@ -142,52 +142,52 @@ const ProfilePage = () => {
                     <span className="font-medium">31</span>
                   </div>
                   <div className="h-2 bg-gray-200 rounded-full">
-                    <div className="h-2 bg-blue-500 rounded-full" style={{ width: '48%' }}></div>
+                    <div className="h-2 bg-medical-secondary rounded-full" style={{ width: '48%' }}></div>
                   </div>
                 </div>
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-              <Button variant="ghost" size="sm" className="text-primary">
+              <Button variant="ghost" size="sm" className="text-medical-primary hover:bg-blue-50">
                 View Full Stats
               </Button>
             </CardFooter>
           </Card>
         </div>
         
-        <Card className="shadow-sm mb-6">
+        <Card className="shadow-sm mb-6 border border-gray-100">
           <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-lg font-semibold">Preferences</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-800">Preferences</CardTitle>
             <CardDescription>Manage your application settings</CardDescription>
           </CardHeader>
           <CardContent className="p-4 space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <Bell size={18} />
-                  <span className="text-base font-medium">Notifications</span>
+                  <Bell size={18} className="text-medical-primary" />
+                  <span className="text-base font-medium text-gray-800">Notifications</span>
                 </div>
                 <p className="text-sm text-gray-500">Receive alerts about new updates and features</p>
               </div>
               <Switch defaultChecked />
             </div>
-            <Separator />
+            <Separator className="bg-gray-100" />
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <Shield size={18} />
-                  <span className="text-base font-medium">Two-Factor Authentication</span>
+                  <Shield size={18} className="text-medical-primary" />
+                  <span className="text-base font-medium text-gray-800">Two-Factor Authentication</span>
                 </div>
                 <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
               </div>
               <Switch />
             </div>
-            <Separator />
+            <Separator className="bg-gray-100" />
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <Database size={18} />
-                  <span className="text-base font-medium">Data Synchronization</span>
+                  <Database size={18} className="text-medical-primary" />
+                  <span className="text-base font-medium text-gray-800">Data Synchronization</span>
                 </div>
                 <p className="text-sm text-gray-500">Automatically sync with hospital records</p>
               </div>
@@ -197,10 +197,10 @@ const ProfilePage = () => {
         </Card>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="shadow-sm">
+          <Card className="shadow-sm border border-gray-100">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <Clipboard size={18} />
+              <CardTitle className="text-base font-semibold flex items-center gap-2 text-gray-800">
+                <Clipboard size={18} className="text-medical-primary" />
                 Template Preferences
               </CardTitle>
             </CardHeader>
@@ -221,31 +221,31 @@ const ProfilePage = () => {
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-medical-primary text-medical-primary hover:bg-blue-50">
                 Customize Templates
               </Button>
             </CardFooter>
           </Card>
           
-          <Card className="shadow-sm">
+          <Card className="shadow-sm border border-gray-100">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <HelpCircle size={18} />
+              <CardTitle className="text-base font-semibold flex items-center gap-2 text-gray-800">
+                <HelpCircle size={18} className="text-medical-primary" />
                 Support & Resources
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-2">
               <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <HelpCircle className="mr-2" size={16} />
+                <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-200 hover:bg-gray-50">
+                  <HelpCircle className="mr-2 text-medical-primary" size={16} />
                   Help Center
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <FileText className="mr-2" size={16} />
+                <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-200 hover:bg-gray-50">
+                  <FileText className="mr-2 text-medical-primary" size={16} />
                   Documentation
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Download className="mr-2" size={16} />
+                <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-200 hover:bg-gray-50">
+                  <Download className="mr-2 text-medical-primary" size={16} />
                   Export Your Data
                 </Button>
               </div>
