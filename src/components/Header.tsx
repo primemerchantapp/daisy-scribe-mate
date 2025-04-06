@@ -17,10 +17,10 @@ const Header = () => {
           <h1 className="text-xl font-medium text-gray-800 font-helvetica">Scribe Medic</h1>
         </div>
         <div className="flex space-x-4">
-          <button className="text-medical-primary p-1 rounded-full hover:bg-blue-50 transition-colors">
+          <button className="text-black p-1 rounded-full hover:bg-gray-50 transition-colors">
             <Info size={24} />
           </button>
-          <button className="text-medical-primary p-1 rounded-full hover:bg-blue-50 transition-colors">
+          <button className="text-black p-1 rounded-full hover:bg-gray-50 transition-colors">
             <Volume2 size={24} />
           </button>
         </div>

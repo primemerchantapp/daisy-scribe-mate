@@ -32,30 +32,30 @@ const BottomNavbar = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-10">
       <div className="flex justify-around items-center h-16 px-2 max-w-md mx-auto">
-        <Link to="/list" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/list' ? 'text-medical-primary' : 'text-gray-500'}`}>
-          <List size={24} className={location.pathname === '/list' ? 'text-medical-primary' : 'text-gray-500'} />
+        <Link to="/list" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/list' ? 'text-black' : 'text-gray-500'}`}>
+          <List size={24} className={location.pathname === '/list' ? 'text-black' : 'text-gray-500'} />
           <span className="text-xs mt-1 font-helvetica">List</span>
         </Link>
         
-        <Link to="/template" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/template' ? 'text-medical-primary' : 'text-gray-500'}`}>
-          <FileText size={24} className={location.pathname === '/template' ? 'text-medical-primary' : 'text-gray-500'} />
+        <Link to="/template" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/template' ? 'text-black' : 'text-gray-500'}`}>
+          <FileText size={24} className={location.pathname === '/template' ? 'text-black' : 'text-gray-500'} />
           <span className="text-xs mt-1 font-helvetica">Template</span>
         </Link>
         
         <div className="relative w-full flex justify-center items-center">
-          <div className="absolute -top-8 bg-medical-primary p-4 rounded-full shadow-md">
+          <div className="absolute -top-8 bg-black p-4 rounded-full shadow-md">
             <ScribeMedicIcon />
           </div>
           <span className="text-xs mt-10 text-gray-500 font-helvetica">Scribe</span>
         </div>
         
-        <Link to="/voice" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/voice' ? 'text-medical-primary' : 'text-gray-500'}`}>
-          <Mic size={24} className={location.pathname === '/voice' ? 'text-medical-primary' : 'text-gray-500'} />
+        <Link to="/voice" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/voice' ? 'text-black' : 'text-gray-500'}`}>
+          <Mic size={24} className={location.pathname === '/voice' ? 'text-black' : 'text-gray-500'} />
           <span className="text-xs mt-1 font-helvetica">Voice</span>
         </Link>
         
-        <Link to="/profile" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/profile' ? 'text-medical-primary' : 'text-gray-500'}`}>
-          <User size={24} className={location.pathname === '/profile' ? 'text-medical-primary' : 'text-gray-500'} />
+        <Link to="/profile" className={`flex flex-col items-center justify-center w-full py-1 ${location.pathname === '/profile' ? 'text-black' : 'text-gray-500'}`}>
+          <User size={24} className={location.pathname === '/profile' ? 'text-black' : 'text-gray-500'} />
           <span className="text-xs mt-1 font-helvetica">Profile</span>
         </Link>
       </div>
