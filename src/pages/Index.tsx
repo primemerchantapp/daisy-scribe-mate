@@ -14,6 +14,8 @@ const Index = () => {
         <div className="space-y-6">
           <PatientSelection />
           <EncounterInput />
+          {/* Add 35px spacing at the bottom */}
+          <div className="h-[35px]"></div>
         </div>
       </main>
       

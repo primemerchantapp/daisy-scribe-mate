@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload } from 'lucide-react';
+import { Upload, Play } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AudioUploaderProps {
@@ -11,6 +11,26 @@ interface AudioUploaderProps {
 
 const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioUploaded, isProcessing }) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const audioElementRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+
+  // Create audio element for playback
+  React.useEffect(() => {
+    audioElementRef.current = new Audio();
+    audioElementRef.current.onended = () => {
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+        audioUrlRef.current = null;
+      }
+    };
+
+    return () => {
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+      }
+    };
+  }, []);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -25,6 +45,7 @@ const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioUploaded, isProces
     }
 
     setIsUploading(true);
+    setCurrentFile(audioFile);
 
     try {
       // Pass the blob to the parent component
@@ -35,13 +56,42 @@ const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioUploaded, isProces
       toast.error('Failed to process the audio file');
     } finally {
       setIsUploading(false);
-      // Reset the file input
-      event.target.value = '';
+      // Don't reset the file input so user can play it back
+    }
+  };
+
+  const playAudio = () => {
+    if (!currentFile) {
+      toast.error('No audio file uploaded');
+      return;
+    }
+
+    // Clean up previous playback
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+    }
+
+    // Create new audio URL
+    audioUrlRef.current = URL.createObjectURL(currentFile);
+    
+    if (audioElementRef.current) {
+      audioElementRef.current.src = audioUrlRef.current;
+      audioElementRef.current.play()
+        .then(() => {
+          toast.info('Playing uploaded audio');
+        })
+        .catch(err => {
+          toast.error(`Playback error: ${err.message}`);
+          if (audioUrlRef.current) {
+            URL.revokeObjectURL(audioUrlRef.current);
+            audioUrlRef.current = null;
+          }
+        });
     }
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center space-y-4">
       <label 
         htmlFor="audio-upload"
         className={`
@@ -74,6 +124,22 @@ const AudioUploader: React.FC<AudioUploaderProps> = ({ onAudioUploaded, isProces
           disabled={isProcessing || isUploading}
         />
       </label>
+
+      {currentFile && (
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-gray-600 font-helvetica truncate max-w-[200px]">
+            {currentFile.name}
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={playAudio}
+            disabled={isProcessing}
+          >
+            <Play size={16} className="mr-1" /> Play
+          </Button>
+        </div>
+      )}
 
       {isUploading && (
         <div className="mt-4">

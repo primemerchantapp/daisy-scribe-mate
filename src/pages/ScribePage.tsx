@@ -8,6 +8,7 @@ import { Upload, Mic, Pause, Play, Square, Save, Download, Mail } from 'lucide-r
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { transcribeAudio } from '@/services/DeepgramService';
+import { supabase } from '@/integrations/supabase/client';
 
 const ScribePage = () => {
   // State for recording and audio processing
@@ -22,11 +23,38 @@ const ScribePage = () => {
   const [fileName, setFileName] = useState('No file selected');
   const [showAiResponse, setShowAiResponse] = useState(false);
   const [wakeLock, setWakeLock] = useState<any>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const timerRef = useRef<number | null>(null);
   
   // Refs for audio elements
   const recordedAudioPlayerRef = useRef<HTMLAudioElement>(null);
   const uploadedAudioPlayerRef = useRef<HTMLAudioElement>(null);
   const audioFileInputRef = useRef<HTMLInputElement>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+
+  // Format recording time
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
+
+  // Handle timer for recording duration
+  useEffect(() => {
+    if (isRecording && !isPaused) {
+      timerRef.current = window.setInterval(() => {
+        setRecordingTime(prevTime => prevTime + 1);
+      }, 1000);
+    } else if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isRecording, isPaused]);
 
   // Request wake lock to prevent screen sleep
   const requestWakeLock = async () => {
@@ -65,6 +93,7 @@ const ScribePage = () => {
     setAiResponse('');
     setShowAiResponse(false);
     setIsProcessing(true);
+    setRecordingTime(0);
 
     if (!navigator.mediaDevices?.getUserMedia) {
       toast.error('Media API not supported in this browser');
@@ -75,6 +104,7 @@ const ScribePage = () => {
     try {
       toast.info('Requesting microphone access...');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
       await requestWakeLock();
 
       setAudioChunks([]);
@@ -110,7 +140,7 @@ const ScribePage = () => {
 
         const chunks = audioChunks;
         if (chunks.length > 0) {
-          const blobType = recorder.mimeType || 'application/octet-stream';
+          const blobType = recorder.mimeType || 'audio/webm';
           const audioBlob = new Blob(chunks, { type: blobType });
           
           if (audioBlob.size > 0) {
@@ -373,18 +403,41 @@ Developed by *Aitek PH Software*`;
   };
 
   // Save to database
-  const saveToDatabase = () => {
+  const saveToDatabase = async () => {
     if (!aiResponse.trim()) {
       toast.warning('No AI content to save');
       return;
     }
     
-    // Mock implementation
+    setIsProcessing(true);
     toast.loading('Saving to database...');
     
-    setTimeout(() => {
+    try {
+      // Get selected patient info (you would get this from your actual app state)
+      const patientName = "Maria Santos";
+      
+      // Store the record in Supabase
+      const { data, error } = await supabase
+        .from('scribe_notes')
+        .insert([
+          {
+            patient_name: patientName,
+            transcript: transcription,
+            ai_response: aiResponse,
+            created_at: new Date().toISOString()
+          }
+        ])
+        .select();
+      
+      if (error) throw error;
+      
       toast.success('Scribe note saved to database!');
-    }, 1500);
+    } catch (error: any) {
+      console.error('Database error:', error);
+      toast.error(`Failed to save: ${error.message}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Download AI content
@@ -426,6 +479,9 @@ Developed by *Aitek PH Software*`;
         if (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused') {
           mediaRecorder.stop();
         }
+      }
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach(track => track.stop());
       }
       releaseWakeLock();
     };
@@ -483,6 +539,13 @@ Developed by *Aitek PH Software*`;
                   </>
                 )}
               </div>
+
+              {isRecording && (
+                <div className="flex items-center gap-2">
+                  <div className={`h-2 w-2 rounded-full ${isPaused ? 'bg-yellow-500' : 'bg-red-500 animate-pulse'}`}></div>
+                  <span className="text-sm font-medium text-gray-600 font-helvetica">{formatTime(recordingTime)}</span>
+                </div>
+              )}
 
               <Button
                 onClick={playRecordedAudio}
@@ -606,6 +669,9 @@ Developed by *Aitek PH Software*`;
             )}
           </CardContent>
         </Card>
+        
+        {/* Add 35px spacing at the bottom */}
+        <div className="h-[35px]"></div>
       </main>
       
       {/* Hidden audio players */}
