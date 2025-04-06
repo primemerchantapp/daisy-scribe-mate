@@ -10,6 +10,7 @@ import ListPage from "./pages/ListPage";
 import TemplatePage from "./pages/TemplatePage";
 import VoicePage from "./pages/VoicePage";
 import ProfilePage from "./pages/ProfilePage";
+import ScribePage from "./pages/ScribePage";
 import NotFound from "./pages/NotFound";
 
 // Create a client
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/template" element={<TemplatePage />} />
             <Route path="/voice" element={<VoicePage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/scribe" element={<ScribePage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

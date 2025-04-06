@@ -43,9 +43,9 @@ const BottomNavbar = () => {
         </Link>
         
         <div className="relative w-full flex justify-center items-center">
-          <div className="absolute -top-8 bg-black p-4 rounded-full shadow-md">
+          <Link to="/scribe" className={`absolute -top-8 bg-black p-4 rounded-full shadow-md ${location.pathname === '/scribe' ? 'ring-2 ring-offset-2 ring-black' : ''}`}>
             <ScribeMedicIcon />
-          </div>
+          </Link>
           <span className="text-xs mt-10 text-gray-500 font-helvetica">Scribe</span>
         </div>
         
