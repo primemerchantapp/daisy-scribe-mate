@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Loader2, Send, Pause, Square } from 'lucide-react';
+import { Mic, MicOff, Loader2, Send, Pause, Square, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -283,15 +283,14 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
               className="bg-black hover:bg-gray-800 text-white"
               disabled={isProcessing}
             >
-              Play Recording
+              <Play className="h-4 w-4 mr-2" /> Play Recording
             </Button>
             <Button 
               onClick={sendAudioForTranscription}
               className="bg-black hover:bg-gray-800 text-white"
               disabled={isProcessing}
             >
-              <Send className="h-4 w-4 mr-2" />
-              Transcribe Audio
+              <Send className="h-4 w-4 mr-2" /> Transcribe Audio
             </Button>
           </div>
         )}

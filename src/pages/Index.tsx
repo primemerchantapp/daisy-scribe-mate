@@ -10,11 +10,11 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <main className="container mx-auto pt-20 pb-8 px-4 overflow-y-auto">
+      <main className="container mx-auto pt-20 pb-24 px-4 overflow-y-auto">
         <div className="space-y-6">
           <PatientSelection />
           <EncounterInput />
-          {/* Add 35px spacing at the bottom */}
+          {/* Add 35px spacing at the bottom for better scrolling */}
           <div className="h-[35px]"></div>
         </div>
       </main>

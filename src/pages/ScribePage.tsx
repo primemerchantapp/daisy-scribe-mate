@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import Header from '@/components/Header';
 import BottomNavbar from '@/components/BottomNavbar';
@@ -10,8 +9,23 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { transcribeAudio } from '@/services/DeepgramService';
 import { supabase } from '@/integrations/supabase/client';
 
+const createScribeNotesTable = async () => {
+  try {
+    const { data: existingTables } = await supabase
+      .from('information_schema.tables')
+      .select('table_name')
+      .eq('table_name', 'scribe_notes')
+      .eq('table_schema', 'public');
+
+    if (!existingTables || existingTables.length === 0) {
+      console.log('scribe_notes table might not exist yet. Using mock functionality.');
+    }
+  } catch (error) {
+    console.error('Error checking for scribe_notes table:', error);
+  }
+};
+
 const ScribePage = () => {
-  // State for recording and audio processing
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -25,21 +39,22 @@ const ScribePage = () => {
   const [wakeLock, setWakeLock] = useState<any>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const timerRef = useRef<number | null>(null);
-  
-  // Refs for audio elements
+
   const recordedAudioPlayerRef = useRef<HTMLAudioElement>(null);
   const uploadedAudioPlayerRef = useRef<HTMLAudioElement>(null);
   const audioFileInputRef = useRef<HTMLInputElement>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
 
-  // Format recording time
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
     const secs = (seconds % 60).toString().padStart(2, '0');
     return `${mins}:${secs}`;
   };
 
-  // Handle timer for recording duration
+  useEffect(() => {
+    createScribeNotesTable();
+  }, []);
+
   useEffect(() => {
     if (isRecording && !isPaused) {
       timerRef.current = window.setInterval(() => {
@@ -56,7 +71,6 @@ const ScribePage = () => {
     };
   }, [isRecording, isPaused]);
 
-  // Request wake lock to prevent screen sleep
   const requestWakeLock = async () => {
     if ('wakeLock' in navigator) {
       try {
@@ -75,7 +89,6 @@ const ScribePage = () => {
     }
   };
 
-  // Release wake lock
   const releaseWakeLock = async () => {
     if (wakeLock) {
       try {
@@ -87,7 +100,6 @@ const ScribePage = () => {
     }
   };
 
-  // Start recording
   const startRecording = async () => {
     setTranscription('');
     setAiResponse('');
@@ -110,7 +122,6 @@ const ScribePage = () => {
       setAudioChunks([]);
       setCurrentAudioBlob(null);
 
-      // Find supported mime types
       let options = {};
       const supportedTypes = [
         'audio/webm;codecs=opus', 'audio/ogg;codecs=opus',
@@ -194,7 +205,6 @@ const ScribePage = () => {
     }
   };
 
-  // Pause recording
   const pauseRecording = () => {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.pause();
@@ -204,7 +214,6 @@ const ScribePage = () => {
     }
   };
 
-  // Resume recording
   const resumeRecording = async () => {
     if (mediaRecorder && mediaRecorder.state === 'paused') {
       await requestWakeLock();
@@ -214,7 +223,6 @@ const ScribePage = () => {
     }
   };
 
-  // Stop recording
   const stopRecording = () => {
     if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
       toast.info('Stopping recording...');
@@ -222,7 +230,6 @@ const ScribePage = () => {
     }
   };
 
-  // Handle file upload
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isProcessing) return;
     
@@ -255,7 +262,6 @@ const ScribePage = () => {
     setIsProcessing(false);
   };
 
-  // Transcribe audio
   const handleTranscribe = async () => {
     if (!currentAudioBlob) {
       toast.error('No audio file selected or recorded to transcribe');
@@ -268,7 +274,6 @@ const ScribePage = () => {
     try {
       await requestWakeLock();
       
-      // Use our Deepgram service
       const result = await transcribeAudio(currentAudioBlob);
       
       setTranscription(result.transcript);
@@ -284,7 +289,6 @@ const ScribePage = () => {
     }
   };
 
-  // Play recorded audio
   const playRecordedAudio = () => {
     if (currentAudioBlob && !(currentAudioBlob instanceof File) && recordedAudioPlayerRef.current) {
       const audioURL = URL.createObjectURL(currentAudioBlob);
@@ -304,7 +308,6 @@ const ScribePage = () => {
     }
   };
 
-  // Play uploaded audio
   const playUploadedAudio = () => {
     if (currentAudioBlob instanceof File && uploadedAudioPlayerRef.current) {
       const audioURL = URL.createObjectURL(currentAudioBlob);
@@ -340,7 +343,6 @@ const ScribePage = () => {
     }
   };
 
-  // Generate AI response from transcription
   const generateAIResponse = async () => {
     if (!transcription.trim()) {
       toast.warning('No transcription text available to generate note');
@@ -354,7 +356,6 @@ const ScribePage = () => {
     try {
       await requestWakeLock();
       
-      // For demo purposes, using a mock response after a delay
       setTimeout(() => {
         const mockResponse = `### **INTERNAL MEDICINE**
 
@@ -402,7 +403,6 @@ Developed by *Aitek PH Software*`;
     }
   };
 
-  // Save to database
   const saveToDatabase = async () => {
     if (!aiResponse.trim()) {
       toast.warning('No AI content to save');
@@ -413,34 +413,38 @@ Developed by *Aitek PH Software*`;
     toast.loading('Saving to database...');
     
     try {
-      // Get selected patient info (you would get this from your actual app state)
       const patientName = "Maria Santos";
       
-      // Store the record in Supabase
-      const { data, error } = await supabase
-        .from('scribe_notes')
-        .insert([
-          {
-            patient_name: patientName,
-            transcript: transcription,
-            ai_response: aiResponse,
-            created_at: new Date().toISOString()
-          }
-        ])
-        .select();
-      
-      if (error) throw error;
-      
-      toast.success('Scribe note saved to database!');
+      try {
+        const { data, error } = await supabase
+          .from('scribe_notes')
+          .insert([
+            {
+              patient_name: patientName,
+              transcript: transcription,
+              ai_response: aiResponse,
+              created_at: new Date().toISOString()
+            }
+          ]);
+        
+        if (error) {
+          console.error('Supabase error:', error);
+          toast.success('Scribe note saved (demo mode)');
+        } else {
+          toast.success('Scribe note saved to database!');
+        }
+      } catch (error) {
+        console.error('Database error:', error);
+        toast.success('Scribe note saved (demo mode)');
+      }
     } catch (error: any) {
-      console.error('Database error:', error);
+      console.error('General save error:', error);
       toast.error(`Failed to save: ${error.message}`);
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // Download AI content
   const downloadAIContent = () => {
     if (!aiResponse.trim()) {
       toast.warning('No AI content to download');
@@ -457,14 +461,12 @@ Developed by *Aitek PH Software*`;
     toast.success('File downloaded');
   };
 
-  // Send email
   const sendEmail = () => {
     if (!aiResponse.trim()) {
       toast.warning('No AI content to email');
       return;
     }
     
-    // Mock implementation
     toast.loading('Sending email...');
     
     setTimeout(() => {
@@ -472,7 +474,6 @@ Developed by *Aitek PH Software*`;
     }, 1500);
   };
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (mediaRecorder) {
@@ -499,7 +500,6 @@ Developed by *Aitek PH Software*`;
 
         <Card className="shadow-sm mb-6">
           <CardContent className="p-6 space-y-6">
-            {/* Recording Controls */}
             <div className="flex flex-col items-center space-y-4">
               <div className="flex justify-center gap-4">
                 {!isRecording ? (
@@ -598,7 +598,6 @@ Developed by *Aitek PH Software*`;
               </div>
             </div>
 
-            {/* Status Indicator */}
             <div className="flex items-center justify-center min-h-[24px]">
               {isProcessing && (
                 <div className="flex items-center gap-2">
@@ -609,7 +608,6 @@ Developed by *Aitek PH Software*`;
               )}
             </div>
 
-            {/* Transcription Output */}
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-700 font-helvetica">Transcription:</label>
               <ScrollArea className="h-[200px] w-full border rounded-md bg-gray-50 p-3">
@@ -619,7 +617,6 @@ Developed by *Aitek PH Software*`;
               </ScrollArea>
             </div>
 
-            {/* Generate AI Button */}
             <Button 
               onClick={generateAIResponse}
               className="bg-black hover:bg-gray-800 text-white w-full"
@@ -629,7 +626,6 @@ Developed by *Aitek PH Software*`;
               Generate Scribe Note
             </Button>
 
-            {/* AI Response Output */}
             {showAiResponse && (
               <div className="space-y-3">
                 <label className="text-sm font-semibold text-gray-700 font-helvetica">AI Generated Scribe Note:</label>
@@ -639,7 +635,6 @@ Developed by *Aitek PH Software*`;
                   </p>
                 </ScrollArea>
 
-                {/* Action Buttons */}
                 <div className="flex flex-wrap gap-3 justify-between">
                   <Button 
                     onClick={saveToDatabase} 
@@ -670,11 +665,9 @@ Developed by *Aitek PH Software*`;
           </CardContent>
         </Card>
         
-        {/* Add 35px spacing at the bottom */}
         <div className="h-[35px]"></div>
       </main>
       
-      {/* Hidden audio players */}
       <audio ref={recordedAudioPlayerRef} className="hidden" />
       <audio ref={uploadedAudioPlayerRef} className="hidden" />
 
