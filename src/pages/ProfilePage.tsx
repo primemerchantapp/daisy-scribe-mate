@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import BottomNavbar from '@/components/BottomNavbar';
@@ -23,18 +22,18 @@ const ProfilePage = () => {
         <div className="flex flex-col items-center mb-8">
           <div className="relative mb-4">
             <Avatar className="h-24 w-24 border-4 border-white shadow-md">
-              <AvatarImage src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80" alt="Dr. Sarah Wilson" />
-              <AvatarFallback>SW</AvatarFallback>
+              <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80" alt="Ms. Eppie" />
+              <AvatarFallback>ME</AvatarFallback>
             </Avatar>
             <Button size="icon" variant="secondary" className="absolute bottom-0 right-0 rounded-full h-8 w-8 bg-medical-primary text-white hover:bg-medical-secondary">
               <Pencil size={16} />
             </Button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800">Dr. Sarah Wilson</h1>
-          <p className="text-gray-600">Pediatric Physician</p>
+          <h1 className="text-2xl font-bold text-gray-800">Ms. Eppie</h1>
+          <p className="text-gray-600">Medical Scribe</p>
           <div className="flex gap-2 mt-2">
             <Badge variant="outline" className="bg-blue-50 text-medical-primary hover:bg-blue-100">
-              Verified Provider
+              Verified Staff
             </Badge>
             <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-100">
               Premium
@@ -63,15 +62,15 @@ const ProfilePage = () => {
             <CardContent className="p-4 pt-2 space-y-2 text-sm">
               <div>
                 <p className="text-gray-500">Email</p>
-                <p>sarah.wilson@medclinic.com</p>
+                <p>eppie@medclinic.com</p>
               </div>
               <div>
                 <p className="text-gray-500">Phone</p>
-                <p>(555) 123-4567</p>
+                <p>(555) 987-6543</p>
               </div>
               <div>
-                <p className="text-gray-500">Specialty</p>
-                <p>Pediatric Medicine</p>
+                <p className="text-gray-500">Role</p>
+                <p>Medical Scribe</p>
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
@@ -91,15 +90,15 @@ const ProfilePage = () => {
             <CardContent className="p-4 pt-2 space-y-2 text-sm">
               <div>
                 <p className="text-gray-500">Organization</p>
-                <p>Metro Children's Hospital</p>
+                <p>Metro General Hospital</p>
               </div>
               <div>
                 <p className="text-gray-500">Department</p>
-                <p>Pediatric Primary Care</p>
+                <p>Medical Records</p>
               </div>
               <div>
-                <p className="text-gray-500">Provider ID</p>
-                <p>MCH7890123</p>
+                <p className="text-gray-500">Staff ID</p>
+                <p>MGH4567890</p>
               </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
